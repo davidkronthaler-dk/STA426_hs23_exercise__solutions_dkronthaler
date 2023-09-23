@@ -1,0 +1,79 @@
+---
+title: "STA426_Exercise_1"
+format: 
+  html:
+    embed-resources: true
+editor: visual
+---
+
+## Exercise Part B.2
+
+#### 0. Preparation
+
+```{r}
+# Delete Workspace
+rm(list = ls())
+
+# Import Libraries
+library(ggplot2)
+library(gridExtra)
+```
+
+#### 1. Sampling values from log-normal distribution
+
+In the first step, 100 values are sampled from a log-normal distribution.
+
+```{r}
+log_norm <- data.frame(rlnorm(n = 100, meanlog = 5, sdlog = 0.5))
+colnames(log_norm) <- c("lognorm")
+```
+
+We obtain a sample of 100 values with a sample mean of `r round(mean(log_norm$lognorm),3)` and a sample standard deviation of `r round(sd(log_norm$lognorm),3)`.
+
+#### 2. Plotting the data
+
+Here we plot the sampled data as a histogram.
+
+```{r}
+ggplot() +
+  geom_histogram(data = log_norm, mapping = aes(x=(lognorm)), 
+                 bins = 22) +
+  xlab("X") +
+  ylab("Density") +
+  ggtitle("Histogram of data sampled from lognormal distribution (log-scaled) (N 100)") +
+  theme_bw()
+
+```
+
+Here we plot the log-scaled sampled data as a histogram.
+
+```{r}
+ggplot() +
+  geom_histogram(data = log_norm, mapping = aes(x=log(lognorm)), 
+                 bins = 22) +
+  xlab("X") +
+  ylab("Density") +
+  ggtitle("Histogram of data sampled from lognormal distribution (N = 100)") +
+  theme_bw()
+```
+
+Here we plot the data in violinplots.
+
+```{r}
+plot1 <- ggplot(log_norm, mapping = aes(x = "Sample", y = lognorm)) +
+  geom_violin() +
+  ylab("Value") +
+  geom_boxplot(width=0.1) +
+  theme_bw() +
+  ggtitle("Log-normal Distribution")
+  
+plot2 <- ggplot(log_norm, mapping = aes(x = "Log-scaled sample", y = log(lognorm))) +
+  geom_violin() +
+  ylab("Value") +
+  geom_boxplot(width=0.1)+
+  theme_bw() +
+  ggtitle("Log-scaled Log-normal Distribution")
+  
+
+grid.arrange(plot1, plot2, ncol=2, nrow = 1)
+```
